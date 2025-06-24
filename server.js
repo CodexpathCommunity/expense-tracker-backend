@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { sql } from "./config/db.js";
 import rateLimitter from "./middleware/rateLimiter.js";
 import transactionsRoute from "./routes/transactions.route.js";
+import job from "./config/cron.js";
 
 dotenv.config();
 
@@ -11,6 +12,10 @@ console.log("Environment Variables:", process.env.PORT);
 const PORT = process.env.PORT || 5001;
 
 const app = express();
+
+if (process.env.NODE_ENV !== "production") {
+  job.start();
+}
 
 app.use(express.json());
 app.use(rateLimitter);
